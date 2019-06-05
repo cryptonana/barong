@@ -18,6 +18,8 @@ module API::V2::Queries
       scoped = filter_by_result(scoped, params[:result])
       scoped = filter_by_uid(scoped, params[:uid])
       scoped = filter_by_email(scoped, params[:email])
+      scoped = filter_by_target(scoped, params[:target_uuid])
+
       params[:ordered] ? scoped.order('activities.created_at DESC') : scoped
     end
 
@@ -52,6 +54,11 @@ module API::V2::Queries
     # adds where(users.email = email) to query
     def filter_by_email(scoped, email = nil)
       email ? scoped.where(users: { email: email }) : scoped
+    end
+
+    # adds where(users.email = target_uuid) to query
+    def filter_by_target(scoped, target_uuid = nil)
+      target_uuid ? scoped.where(users: { uid: target_uuid }) : scoped
     end
   end
 end
